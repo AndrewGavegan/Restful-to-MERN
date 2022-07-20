@@ -1,4 +1,5 @@
 //import relevant hooks and refactor inports from the utils folder//
+import React from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 import { GET_ME } from '../utils/queries';
