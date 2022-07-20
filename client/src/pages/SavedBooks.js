@@ -11,20 +11,17 @@ import { removeBookId } from '../utils/localStorage';
 const SavedBooks = () => {
   const { loading, data: userData } = useQuery({ GET_ME });
   const [removeBook] = useMutation(REMOVE_BOOK);
-  // use this to determine if `useEffect()` hook needs to run again
 
 
   // moving JWT code from inside handle delete to SavedBooks
   const token = Auth.loggedIn() ? Auth.getToken() : null;
   if (!token) { return false; }
 
-  // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
     try {
       await removeBook({ bookId: bookId });
     } catch (err) {
       console.error(err);
-      // upon success, remove book's id from localStorage
     } removeBookId(bookId);
   };
   //similar render to student mini project, render a message for loading and a message for no books found//
