@@ -34,9 +34,17 @@ const resolvers = {
         { userID: context.user.userID },
         { $addToSet: { savedBooks: bookInfo.body } },
         // must pass new true here///
-        { new: true, runValidation: true }
+        { new: true, runValidators: true }
       );
       return savedBook;
+    },
+    removeBook: async (parent, { bookId }, context) => {
+      const removedBook = await User.findOneAndUpdate(
+        { userID: context.user.userID },
+        { $pull: { savedBooks: { bookId: bookId } } },
+        { new: true }).populate('savedBooks');
     }
   }
 }
+
+module.exports = resolvers;
