@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 //import relevant hooks and refactor inports from the utils folder//
 import { useQuery, useMutation } from '@apollo/client';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
@@ -12,31 +11,20 @@ const SavedBooks = () => {
   const { loading, data: userData } = useQuery({ GET_ME });
   const [removeBook] = useMutation(REMOVE_BOOK);
   // use this to determine if `useEffect()` hook needs to run again
-  const userDataLength = Object.keys(userData).length;
 
+
+  // moving JWT code from inside handle delete to SavedBooks
+  const token = Auth.loggedIn() ? Auth.getToken() : null;
+  if (!token) { return false; }
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
-    const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-    if (!token) {
-      return false;
-    }
-
     try {
-      const response = await deleteBook(bookId, token);
-
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-
-      const updatedUser = await response.json();
-      setUserData(updatedUser);
-      // upon success, remove book's id from localStorage
-      removeBookId(bookId);
+      await removeBook({ bookId: bookId });
     } catch (err) {
       console.error(err);
-    }
+      // upon success, remove book's id from localStorage
+    } removeBookId(bookId);
   };
 
   // if data isn't here yet, say so
@@ -53,7 +41,7 @@ const SavedBooks = () => {
       </Jumbotron>
       <Container>
         <h2>
-          {userData.savedBooks.length
+          {userData.me.length
             ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'book' : 'books'}:`
             : 'You have no saved books!'}
         </h2>
