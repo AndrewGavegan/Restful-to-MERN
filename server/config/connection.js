@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/cluster0', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/restful-to-mern', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
